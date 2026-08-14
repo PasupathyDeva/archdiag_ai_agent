@@ -1,3 +1,4 @@
+[archdiag.md](https://github.com/user-attachments/files/31058227/archdiag.md)
 ---
 inclusion: agent
 agents:
@@ -154,85 +155,165 @@ These rules take precedence over all styling instructions.
 
 Architecture accuracy and visual quality are equally important.
 
-The image must resemble Microsoft Learn architecture documentation rather than an automatically generated infographic.
+The image must resemble a **rich, information-dense enterprise architecture blueprint** — NOT a simple flowchart or minimal diagram. Think of it as a **technical poster** that an architect would pin on the wall or present at an Architecture Review Board.
+
+## Reference Style (MANDATORY)
+
+Every PNG diagram MUST follow this exact visual structure and density level. The reference is a professional enterprise architecture infographic with these characteristics:
+
+### Overall Layout Structure (top to bottom):
+
+1. **TITLE BAR** — Large bold title at the very top (e.g., "SAP BTP EVENT INGESTION TO AZURE DATA LAKE") with a subtitle line listing design principles (e.g., "Event-driven • Reliable • Secure • Observability-driven • Configuration-first")
+
+2. **DESIGN PRINCIPLES BANNER** — A horizontal row of 5-6 key architecture principles, each with a colored icon and 2-line description (e.g., "REAL-TIME INGESTION: Sub-second event capture", "HIGH RELIABILITY: At-least-once delivery, Idempotent processing", "SCALABLE: Elastic scale, parallelism", "SECURE BY DESIGN: Least-privilege access", "OBSERVABLE: Logs, Metrics, Traces", "GOVERNED: Data contracts, Retention")
+
+3. **LEGEND** — Top-right corner showing connector types: solid blue = Primary Data Flow, dashed gray = Configuration Flow, red = Failure/Retry Flow, dotted = Telemetry/Observability
+
+4. **MAIN ARCHITECTURE FLOW** — The core of the diagram. Numbered phase columns (e.g., "01 PUBLISH", "02 BUFFER", "03 INGEST & PROCESS", "04 PERSIST") with detailed component cards inside each column. This section takes ~60% of the vertical space.
+
+5. **BOTTOM HORIZONTAL BARS** — Three full-width bars below the main flow:
+   - **SECURITY & GOVERNANCE** bar (icons + labels for: Least Privilege, Managed Identity, Encryption, Network Security, Key Management, Compliance)
+   - **OBSERVABILITY & OPERATIONS** bar (icons + labels for: Application Insights, Metrics, Alerts, Dashboards, Audit & Monitoring)
+   - **RELIABILITY & RECOVERY PATTERNS** bar (icons + labels for: At-least-once Delivery, Checkpointing, Idempotent Processing, Retry with Backoff, Poison Event Handling, Replay Capability, Operational Runbook)
+
+6. **KEY METRICS** — Bottom-right corner showing example metrics (Events Received/sec, Events Processed/sec, Invalid Events/sec, Processing Latency, Event Hub Lag, Function Failures/Retries)
+
+### Main Architecture Flow — Component Detail Level:
+
+Each phase column in the main flow MUST contain:
+
+- **Phase number and label** at the top (e.g., "01 PUBLISH")
+- **Service icon** (official branded icon for Azure, SAP, Snowflake, etc.)
+- **Service name and subtitle** (e.g., "Azure Event Hubs" / "(Standard / Dedicated)")
+- **Internal detail card** showing:
+  - Feature checklist with checkmarks (✓) for key capabilities
+  - Configuration details (partition count, retention, consumer groups, etc.)
+  - For processing components: numbered pipeline steps (1. Receive Batch, 2. Deserialize, 3. Validate, 4. Load Config, 5. Apply Rules, 6. Idempotency Check, 7. Routing)
+  - Routing outcomes with colored status icons (green ✓ = Valid, orange ⊘ = Invalid, red △ = Failure/Transient)
+- **Event contract** — Show a JSON sample of the message structure where relevant
+- **Connectors** between columns with labeled arrows showing auth method (e.g., "SendOnly SAS TLS 1.2", "ListenOnly SAS TLS 1.2")
+
+### Control Plane Sidebar:
+
+On the far right, include a **CONTROL PLANE** section showing configuration files:
+- List each config file by name with bullet points of what it controls
+- Show site configuration (which sites use this pattern)
+- Versioning & Change Management note
+
+### Decision/Routing Logic:
+
+When a processing component has routing logic (valid/invalid/retry), show it as:
+- Three output paths with colored icons (green checkmark = VALID, orange X = INVALID, red triangle = FAILURE)
+- Below each path: a small detail box (e.g., "Quarantine Logic: Reason | EventId | Payload | Rule | Schema | Timestamp")
+- Retry path with "RETRY / REPLAY (At-least-once Delivery)" label and arrow looping back
 
 ## Canvas
 
 - Always 16:9 landscape
-- 1920 × 1080 pixels
+- 1792 × 1024 pixels (generation size) — will render at 4K quality
 - Never portrait
 - Never vertically stretched
 - Width approximately twice the height
-- Left-to-right reading order
+- Left-to-right reading order for the main flow
 - White background
 - 4K-ready composition
-- Do not let content change orientation
+- Dense but organized — fill the canvas with useful information
 
 ## Composition
 
 - Build the visual layout before describing architecture
-- Five to seven equal-width columns
-- Equal container heights
-- 32px spacing between columns
-- 10–15% whitespace across the page
-- Never compress sections to fit additional labels
-- Prefer simplifying labels over reducing spacing
+- Main flow uses numbered columns (01, 02, 03, 04, etc.)
+- Each column is a rounded-corner container with light background
+- Dense internal content — every component card shows detailed internals
+- Design principles banner spans full width at top
+- Three bottom bars span full width
+- Control Plane sidebar on the right
+- Legend in top-right corner
+- NO empty space — every area of the canvas should contain useful architecture information
+
+## Information Density
+
+This is the most critical difference from a simple diagram:
+
+- Every component must show its **internal details** (not just a name and icon)
+- Show **feature checklists** (✓ Kafka-enabled, ✓ Zone-redundant, ✓ TLS 1.2)
+- Show **numbered processing steps** inside function/processing components
+- Show **routing logic** with colored outcome icons
+- Show **event/message contracts** as JSON snippets
+- Show **connection labels** with auth method and protocol
+- Include **architecture cross-cutting concerns** in bottom bars (security, observability, reliability)
+- Include **key metrics** that would be monitored
+- Include **configuration files** and what they control
+
+The diagram should contain enough information that a new team member could understand the ENTIRE architecture just by reading the diagram — without needing additional documentation.
 
 ## Visual Hierarchy
 
-Each section should contain:
-
-1. Section header
-2. Primary service icon
-3. Service title
-4. Optional subtitle
-5. Supporting elements
-
-Icons should occupy no more than 20% of the section.
-
-Text must remain readable from presentation distance.
-
-## Balance
-
-- Prefer symmetry
-- Prefer horizontal balance
-- Avoid tall narrow layouts
-- Avoid empty vertical space
-- Avoid crowded containers
+1. Title (largest, bold, dark navy)
+2. Phase numbers and labels (large, colored)
+3. Service names (medium, bold)
+4. Detail text and bullet points (small but readable)
+5. Bottom bar items (compact, icon + label)
 
 ## Typography
 
 Segoe UI or equivalent
 
-Title: ~34pt
+Title: ~34pt bold, dark navy (#1a237e or #1e3a5f)
 
-Section headers: ~20pt
+Subtitle/principles: ~14pt, gray
 
-Labels: ~14pt
+Phase numbers: ~24pt bold, colored per section
 
-Annotations: ~11pt
+Service names: ~16pt bold
+
+Detail text: ~10-11pt regular
+
+Bottom bar labels: ~9-10pt
 
 Never overlap text.
 
+## Color Coding
+
+- Phase headers: dark navy/indigo with white text
+- Containers: white or very light gray (#F8F9FA) with colored left border or top accent
+- SAP components: orange (#FF6D00) accent
+- Azure Event Hub: purple (#7B1FA2) accent
+- Azure Functions: yellow/amber (#FFC107) accent with blue icon
+- Azure Storage: blue (#0078D4) accent
+- Valid/Success: green (#4CAF50)
+- Invalid/Quarantine: orange (#FF9800) or red (#E53935)
+- Retry/Failure: red (#D32F2F)
+- Configuration: gray (#607D8B)
+- Security items: dark blue (#1565C0) with lock icons
+- Observability items: teal (#00897B)
+- Reliability items: indigo (#3949AB)
+
 ## Containers
 
-- Rounded corners
-- Very light gray background (#F8F9FA)
-- Thin border (#E0E0E0)
-- Minimal shadow
-- No gradients
+- Rounded corners (8-12px radius)
+- Light background fills (very subtle)
+- Colored left border or top accent line for phase identification
+- Internal cards with white background and thin border
+- Shadow on main phase containers for depth
 
 ## Connectors
 
-- Straight horizontal connectors
-- No curved arrows
-- No diagonal routing
-- Avoid crossing connectors
-- Connector labels outside components
+- Straight horizontal connectors for main data flow (solid blue)
+- Dashed connectors for configuration reads
+- Red/orange connectors for error/retry paths
+- Dotted connectors for telemetry
+- All connectors labeled with protocol/auth method
+- Arrowheads showing direction
 
 ## Icons
 
-Use official Azure Architecture icons, the official Snowflake logo and SAP branding where appropriate.
+- Use official branded icons: Azure (colored flat), SAP (orange hexagon), Snowflake (blue snowflake mark)
+- Use colored status icons: green checkmark, orange X, red triangle, blue info
+- Use small icons in bottom bars for each security/observability/reliability item
+- Lock icon (🔒) for security connections
+- Gear icon (⚙️) for configuration
+- Chart icon (📊) for metrics
 
 All icons come from the local stencil library at
 `C:\Users\edevpas\OneDrive - Ericsson\Documents\MYFOLDER-HardDisk\MY FOLDER\IDAP\DrawioStencils`
@@ -256,10 +337,13 @@ Must be:
 - Professional typography
 - Clean alignment
 - Consistent spacing
-- Minimal clutter
 - White background
 - Official icon style
 - No watermark
+- DENSE and INFORMATION-RICH — fill every section with useful technical details
+- Every component shows internals (feature lists, config details, processing steps)
+- Cross-cutting concerns shown in horizontal bottom bars
+- Design principles shown in top banner
 
 Never resemble:
 
@@ -268,6 +352,8 @@ Never resemble:
 - Poster
 - Sketch
 - Wireframe
+- Simple box-and-arrow diagrams with minimal text
+- Diagrams with large empty white spaces
 
 ---
 
@@ -291,7 +377,7 @@ Consume
 
 Monitoring
 
-Use swimlanes when multiple platforms exist.
+Use visual grouping containers (rounded rectangles with colored borders) when multiple platforms exist.
 
 ---
 
@@ -530,6 +616,32 @@ Before returning any artifact verify:
 
 ✓ PowerPoint-ready
 
+✓ Design principles banner present at top
+
+✓ Numbered phase columns in main flow
+
+✓ Internal detail cards with feature checklists and processing steps
+
+✓ Routing logic with colored outcome icons (valid/invalid/failure)
+
+✓ Security & Governance bottom bar
+
+✓ Observability & Operations bottom bar
+
+✓ Reliability & Recovery Patterns bottom bar
+
+✓ Key Metrics section
+
+✓ Control Plane sidebar with config file details
+
+✓ Event contract JSON sample (where applicable)
+
+✓ Connection labels showing auth method and protocol
+
+✓ Legend showing connector types
+
+✓ NO large empty white spaces — every area contains useful information
+
 If any quality gate fails, improve the output before returning it.
 
 ---
@@ -550,18 +662,54 @@ When generating `.drawio` files, the archdiag agent MUST follow the practices fr
 - Multi-line text: use `&#xa;` for line breaks in `value` attributes (not literal newlines)
 - Escape special chars: `&amp;`, `&lt;`, `&gt;`, `&quot;`
 
-## Containers (Architecture Tiers/Layers)
+## Containers (Architecture Tiers/Layers) — INFOGRAPHIC STYLE
 
-Use `swimlane;startSize=30;` for tier containers. Children use the container's id as parent and RELATIVE coordinates:
+NEVER use `swimlane;startSize=30;` — it creates collapsible/expandable sections
+that look like generic Visio diagrams and break the executive-presentation style.
+
+Instead, use layered rounded rectangles as visual grouping containers:
+
+1. **Outer container**: A large `rounded=1;whiteSpace=wrap;html=1;` rectangle with
+   light fill, colored stroke, shadow, and `arcSize=8` to `arcSize=12`.
+2. **Section header**: A separate `text;html=1;` cell positioned at the top of the
+   container for the section title (fontSize=14, fontStyle=1, colored fontColor).
+3. **Inner items**: Smaller `rounded=1;whiteSpace=wrap;html=1;` cells placed inside
+   using `parent="1"` with absolute coordinates that visually sit within the
+   container bounds.
+
+All children use `parent="1"` (the root layer) — NOT the container's id. Position
+them with absolute coordinates inside the visual bounds of the container. This
+avoids draw.io's container collapse/expand behavior entirely.
+
+### Style pattern for containers:
 
 ```xml
-<mxCell id="10" value="API Gateway Layer" style="swimlane;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;html=1;fontSize=14;fontStyle=1;" vertex="1" parent="1">
-  <mxGeometry x="100" y="200" width="1000" height="120" as="geometry" />
+<!-- Outer visual container (NOT a swimlane) -->
+<mxCell id="10" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0F7FF;strokeColor=#0078D4;strokeWidth=2;shadow=1;arcSize=8;" vertex="1" parent="1">
+  <mxGeometry x="60" y="140" width="520" height="330" as="geometry" />
 </mxCell>
-<mxCell id="11" value="JWT Validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="10">
-  <mxGeometry x="20" y="40" width="160" height="60" as="geometry" />
+<!-- Section title as a separate text cell -->
+<mxCell id="11" value="IDAP_SERVE Schema" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#0078D4;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+  <mxGeometry x="60" y="95" width="520" height="25" as="geometry" />
+</mxCell>
+<!-- Inner grouping box -->
+<mxCell id="12" value="Views (V_)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#4CAF50;verticalAlign=top;fontStyle=1;fontSize=11;fontColor=#2E7D32;shadow=1;arcSize=10;" vertex="1" parent="1">
+  <mxGeometry x="80" y="160" width="240" height="220" as="geometry" />
+</mxCell>
+<!-- Individual items inside the group -->
+<mxCell id="13" value="V_PRODUCTION_OUTPUT" style="rounded=1;whiteSpace=wrap;html=1;fontSize=9;fillColor=#FFFFFF;strokeColor=#C8E6C9;arcSize=15;" vertex="1" parent="1">
+  <mxGeometry x="90" y="190" width="220" height="24" as="geometry" />
 </mxCell>
 ```
+
+### Key rules:
+- Every container is a plain rounded rectangle — no `swimlane`, no `startSize`, no `collapsible`
+- Use `shadow=1` on major containers for depth
+- Use `arcSize=8` to `arcSize=12` for rounded corners
+- Section titles are separate text cells, not embedded in the container style
+- Use `strokeWidth=2` on primary containers, `strokeWidth=1` on inner items
+- Inner items use `fillColor=#FFFFFF` with a light colored `strokeColor`
+- Items that are future/planned use `fillColor=#F5F5F5;strokeColor=#BDBDBD;fontStyle=2`
 
 ## Edges (Connectors)
 
@@ -580,17 +728,32 @@ Every edge MUST have a `<mxGeometry relative="1" as="geometry" />` child. Self-c
 - Use `flowAnimation=1;` for data-flow emphasis
 - Use waypoints `<Array as="points">` when edges must route around shapes
 
-## Color Palette
+## Color Palette (Infographic Style)
 
-| Role | fillColor | strokeColor | Use for |
-|------|-----------|-------------|---------|
-| Blue | `#dae8fc` | `#6c8ebf` | services, clients, compute |
-| Green | `#d5e8d4` | `#82b366` | gateways, success, databases |
-| Yellow | `#fff2cc` | `#d6b656` | queues, decisions, caching |
-| Orange | `#ffe6cc` | `#d79b00` | processing, APIs |
-| Red/Pink | `#f8cecc` | `#b85450` | errors, alerts |
-| Grey | `#f5f5f5` | `#666666` | external systems |
-| Purple | `#e1d5e7` | `#9673a6` | security, auth, cross-cutting |
+Use these Material Design–inspired colors for a polished, executive-ready look:
+
+| Role | fillColor | strokeColor | fontColor | Use for |
+|------|-----------|-------------|-----------|---------|
+| Primary Blue | `#E3F2FD` | `#1976D2` | `#1565C0` | Primary sections, broad roles, platform containers |
+| Section Blue | `#F0F7FF` | `#0078D4` | `#0078D4` | Main schema/section containers |
+| Green | `#E8F5E9` | `#4CAF50` | `#2E7D32` | Functional roles, success, views |
+| Purple | `#EDE7F6` | `#7E57C2` | `#4527A0` | Semantic layers, AI/ML components |
+| Yellow/Gold | `#FFF8E1` | `#FFC107` | `#F57F17` | Agents, design principles, key notes |
+| Orange | `#FFF3E0` | `#FF9800` | `#E65100` | External sources, provisioning |
+| Red/Alert | `#FFEBEE` | `#E53935` | `#C62828` | Sensitive data, alerts, restrictions |
+| White Item | `#FFFFFF` | (light parent) | `#333333` | Individual items inside groups |
+| Planned/Future | `#F5F5F5` | `#BDBDBD` | `#757575` | Future items (use fontStyle=2 italic) |
+| Dark Text | — | — | `#1e3a5f` | Titles |
+| Subtitle | — | — | `#666666` | Subtitles, annotations |
+
+### Color usage rules:
+- Main page background: white (no fill on the page)
+- Container fills are very light tints (never saturated)
+- Stroke colors are the medium-saturation version of the fill color family
+- Font colors are the dark version of the stroke color family
+- Use `shadow=1` on primary containers for subtle depth
+- Never use gradients
+- Keep contrast high for readability
 
 ## Icons / Shapes
 
